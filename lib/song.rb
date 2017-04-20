@@ -22,6 +22,13 @@ class Song
     @@songs << song
     song
   end
+
+  def self.create_by_name(song_name)
+    song = self.new
+    song.name = song_name
+    @@songs << song
+    song
+  end
   
   def self.destroy_all
     self.all.clear
