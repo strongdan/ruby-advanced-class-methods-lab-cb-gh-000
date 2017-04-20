@@ -29,6 +29,10 @@ class Song
     @@songs << song
     song
   end
+
+  def self.find_by_name(name)
+    @@songs.detect{|song| song.name == name}
+  end
   
   def self.destroy_all
     self.all.clear
