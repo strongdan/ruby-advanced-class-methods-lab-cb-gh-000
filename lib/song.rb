@@ -1,69 +1,68 @@
 class Song
   attr_accessor :name, :artist_name
-  @@songs = []
+  @@all = []
 
   def self.all
-    @@songs
+    @@all
   end
 
   def save
-    self.class.songs << self
+    self.class.all << self
   end
 
   def self.create
-      song = self.new
-      @@songs << song
-      song
-  end
-
-  def self.new_by_name(song_name)
     song = self.new
-    song.name = song_name
-    @@songs << song
-    song
-  end
-
-  def self.create_by_name(song_name)
-    song = self.new
-    song.name = song_name
-    @@songs << song
+    song.save
     song
   end
 
   def self.find_by_name(name)
-    @@songs.detect{|song| song.name == name}
+    @@all.detect{|i| i.name == name}
+  end
+
+  def  self.new_by_name(name)
+    song = self.new
+    song.name = name
+    song
+  end
+
+  def self.create_by_name(name)
+    song = self.new
+    song.name = name
+    song.save
+    song
   end
 
   def self.find_or_create_by_name(name)
-    if find_by_name(name)
-      return @@songs.detect{|song| song.name == name}
+    song = self.find_by_name(name)
+    if song == nil
+      self.create_by_name(name)
     else
-      create_by_name(name)
+      song
     end
   end
 
   def self.alphabetical
-    @@songs.each do |song|
-      songs = song.sort_by {|name, artist_name| name}
-    end
-    songs
+    self.all.sort_by{|song| song.name};
   end
 
   def self.new_from_filename(filename)
     song = self.new
-    artist = filename.split(' - ').first
-    song = filename.split(' - ').last.split('.').first
-    song.name = song
-    song.artist_name = artist
-    @@songs << song
+    data = filename.split(" - ")
+    song.artist_name = data[0]
+    remove = data[1].split(".")
+    song.name = remove[0]
     song
   end
 
   def self.create_from_filename(filename)
-
+    song = self.new_from_filename(filename)
+    song.save
   end
 
   def self.destroy_all
-    self.all.clear
+    @@all.clear
+
   end
+
 end
